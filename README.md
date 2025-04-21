@@ -83,7 +83,7 @@ describe("NPM init with steps", async () => {
     expect(exitCode).toBe(0);
   });
 
-  it("package.json contains the valid entries", () => {
+  it("writes the correct `package.json` entries", () => {
     expect(readFileSync(join(tmpDir, "package.json")).toString())
       .toMatchInlineSnapshot(`
       "{
