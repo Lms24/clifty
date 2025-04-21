@@ -2,6 +2,8 @@
 
 The nifty CLI execution, interaction and testing tool
 
+**WARNING**: API design still work in progress, expect breaking changes!
+
 ## About
 
 Clifty is small and nifty abstraction layer around invoking and interacting with
