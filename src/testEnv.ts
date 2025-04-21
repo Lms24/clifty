@@ -18,7 +18,10 @@ export class TestEnv implements ITestEnv {
     this.#debug = options.debug ?? false;
   }
 
-  buildScenario(): Pick<ScenarioBuilder, "whenAsked" | "step"> {
+  buildScenario(): Pick<
+    ScenarioBuilder,
+    "whenAsked" | "step" | "run" | "expectOutput"
+  > {
     return new ScenarioBuilder(this);
   }
 
