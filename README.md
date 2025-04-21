@@ -1,19 +1,21 @@
-# Clifty
+# Clifty 🧗‍♂️
 
-The nifty CLI execution, interaction and testing tool
+<img width="128" height="128 src="./doc/clifty-logo.png">
+
+> Your CLI’s nifty new best friend. Declarative CLI orchestration made easy.
 
 **WARNING**: API design still work in progress, expect breaking changes!
 
 ## About
 
-Clifty is small and nifty abstraction layer around invoking and interacting with
-command line interfaces or tools.
+**Clifty** lets you script flows through CLI apps using a clean, readable, and high-level API.
+Whether you're writing end-to-end tests or embedding CLI behavior into your app, Clifty makes interacting with child processes a breeze.
 
-Some areas of application:
+## ✨ Features
 
-- CLI E2E testing (original purpose)
-- Interacting with tools that don't offer a programmatic API
-- You tell me :)
+- 🧠 **Declarative**: Define expected outputs and matching inputs in a readable chain.
+- 🧪 **Test-Friendly**: Use with Jest, Vitest, or any test runner.
+- 🔧 **The Last Resort**: Interact with tools that don't offer a programmatic API
 
 ## Install
 
