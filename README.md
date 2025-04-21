@@ -43,6 +43,7 @@ const exitCode = await cliEnv
   .buildScenario()
   .whenAsked("what's your name?")
   .respondWith("hacktor", KEYS.ENTER)
+  .expectOutput("Hello hacktor")
   .run("./hello-world");
 
 console.log(exitCode);
