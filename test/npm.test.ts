@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, afterAll } from "vitest";
+import { describe, it, expect } from "vitest";
 import { KEYS, TestEnv } from "../src/index.js";
-import { existsSync, readFileSync, rmSync } from "fs";
+import { readFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
+import { withEnv } from "../src/withEnv.js";
 
 describe("NPM init", async () => {
   const tmpDir = tmpdir();
@@ -12,7 +13,7 @@ describe("NPM init", async () => {
   });
 
   const exitCode = await testbed
-    .buildScenario()
+    .defineInteraction()
     .whenAsked("package name:")
     .respondWith("testproject123", KEYS.ENTER)
     .whenAsked("version:")
@@ -57,12 +58,8 @@ describe("NPM init", async () => {
 describe("NPM init with steps", async () => {
   const tmpDir = tmpdir();
 
-  const testbed = new TestEnv({
-    cwd: tmpDir,
-  });
-
-  const exitCode = await testbed
-    .buildScenario()
+  const exitCode = await withEnv({ cwd: tmpDir })
+    .defineInteraction()
     .step("Give package a name", (whenAsked) => {
       whenAsked("package name:").respondWith("testproject123", KEYS.ENTER);
     })
@@ -107,13 +104,8 @@ describe("NPM init with steps", async () => {
 describe("NPM help", async () => {
   const tmpDir = tmpdir();
 
-  const testbed = new TestEnv({
-    cwd: tmpDir,
-    debug: true,
-  });
-
-  const exitCode = await testbed
-    .buildScenario()
+  const exitCode = await withEnv({ cwd: tmpDir })
+    .defineInteraction()
     .expectOutput(
       `npm <command>
 

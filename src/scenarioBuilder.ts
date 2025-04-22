@@ -1,6 +1,5 @@
 import { spawn } from "child_process";
-import { TestEnv } from "./types.js";
-import { time } from "console";
+import { InteractionBuilder, TestEnv } from "./types.js";
 
 const DEFAULT_STEP_TIMEOUT = 5000;
 
@@ -17,7 +16,7 @@ type Step = { id: number; timeout?: number } & (
     }
 );
 
-export class ScenarioBuilder {
+export class ScenarioBuilder implements InteractionBuilder {
   #testEnv: TestEnv;
 
   #steps: Array<Step>;
@@ -49,7 +48,7 @@ export class ScenarioBuilder {
   whenAsked(
     stdout: string,
     opts?: { timeout?: number }
-  ): Pick<ScenarioBuilder, "respondWith"> {
+  ): Pick<InteractionBuilder, "respondWith"> {
     this.#steps.push({
       id: this.#stepCount++,
       type: "prompt",
@@ -68,7 +67,7 @@ export class ScenarioBuilder {
    */
   respondWith(
     ...stdinResponse: string[]
-  ): Pick<ScenarioBuilder, "whenAsked" | "step" | "expectOutput" | "run"> {
+  ): Omit<InteractionBuilder, "respondWith"> {
     this.#promptResponses[this.#promptCount] = stdinResponse;
     this.#promptCount++;
     return this;
@@ -83,7 +82,10 @@ export class ScenarioBuilder {
    * @param stdout - The specific `stdout` CLI output to expect.
    * @param opts - Optional timeout (default is 5 seconds).
    */
-  expectOutput(output: string, opts?: { timeout?: number }): ScenarioBuilder {
+  expectOutput(
+    output: string,
+    opts?: { timeout?: number }
+  ): Omit<InteractionBuilder, "respondWith"> {
     this.#steps.push({
       id: this.#stepCount++,
       type: "output",
@@ -104,7 +106,7 @@ export class ScenarioBuilder {
   step(
     name: string,
     stepCallback: (whenAsked: ScenarioBuilder["whenAsked"]) => void
-  ): Pick<ScenarioBuilder, "whenAsked" | "step" | "run"> {
+  ): Omit<InteractionBuilder, "respondWith"> {
     try {
       stepCallback(this.whenAsked.bind(this));
     } catch (e) {

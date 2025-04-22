@@ -1,9 +1,9 @@
 import { ScenarioBuilder } from "./scenarioBuilder.js";
-import type { TestEnv as ITestEnv } from "./types.js";
+import type { InteractionBuilder, TestEnv as ITestEnv } from "./types.js";
 
 interface TestEnvOptions {
   cwd?: string;
-  env?: Record<string, string>;
+  env?: Record<string, string | undefined>;
   debug?: boolean;
 }
 
@@ -18,8 +18,8 @@ export class TestEnv implements ITestEnv {
     this.#debug = options.debug ?? false;
   }
 
-  buildScenario(): Pick<
-    ScenarioBuilder,
+  defineInteraction(): Pick<
+    InteractionBuilder,
     "whenAsked" | "step" | "run" | "expectOutput"
   > {
     return new ScenarioBuilder(this);
