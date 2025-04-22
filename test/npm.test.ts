@@ -7,10 +7,9 @@ import { withEnv } from "../src/withEnv.js";
 
 const npmEnv = {
   ...process.env,
-  FORCE_COLOR: "0",
-  CI: "false",
-  npm_config_init_defaults: "false",
-  npm_config_init_main: "index.js",
+  CI: "1",
+  // npm_config_init_defaults: "false",
+  // npm_config_init_main: "index.js",
 };
 
 describe("NPM init", async () => {
