@@ -9,12 +9,7 @@ const npmEnv = {
   ...process.env,
   FORCE_COLOR: "0",
   CI: "false",
-  // npm_config_init_author_name: "",
-  // npm_config_init_author_email: "",
-  // npm_config_init_author_url: "",
-  // npm_config_init_license: "",
-  // npm_config_init_version: "",
-  // npm_config_init_defaults: "false",
+  npm_config_init_defaults: "false",
   npm_config_init_main: "index.js",
 };
 
