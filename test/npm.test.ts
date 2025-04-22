@@ -5,11 +5,25 @@ import { tmpdir } from "os";
 import { join } from "path";
 import { withEnv } from "../src/withEnv.js";
 
+const npmEnv = {
+  ...process.env,
+  FORCE_COLOR: "0",
+  CI: "false",
+  // npm_config_init_author_name: "",
+  // npm_config_init_author_email: "",
+  // npm_config_init_author_url: "",
+  // npm_config_init_license: "",
+  // npm_config_init_version: "",
+  // npm_config_init_defaults: "false",
+  npm_config_init_main: "index.js",
+};
+
 describe("NPM init", async () => {
   const tmpDir = tmpdir();
 
   const testbed = new TestEnv({
     cwd: tmpDir,
+    env: npmEnv,
   });
 
   const exitCode = await testbed
@@ -58,7 +72,10 @@ describe("NPM init", async () => {
 describe("NPM init with steps", async () => {
   const tmpDir = tmpdir();
 
-  const exitCode = await withEnv({ cwd: tmpDir })
+  const exitCode = await withEnv({
+    cwd: tmpDir,
+    env: npmEnv,
+  })
     .defineInteraction()
     .step("Give package a name", (whenAsked) => {
       whenAsked("package name:").respondWith("testproject123", KEYS.ENTER);
@@ -104,7 +121,10 @@ describe("NPM init with steps", async () => {
 describe("NPM help", async () => {
   const tmpDir = tmpdir();
 
-  const exitCode = await withEnv({ cwd: tmpDir })
+  const exitCode = await withEnv({
+    cwd: tmpDir,
+    env: npmEnv,
+  })
     .defineInteraction()
     .expectOutput(
       `npm <command>
