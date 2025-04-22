@@ -5,19 +5,11 @@ import { tmpdir } from "os";
 import { join } from "path";
 import { withEnv } from "../src/withEnv.js";
 
-const npmEnv = {
-  ...process.env,
-  CI: "1",
-  // npm_config_init_defaults: "false",
-  // npm_config_init_main: "index.js",
-};
-
 describe("NPM init", async () => {
   const tmpDir = tmpdir();
 
   const testbed = new TestEnv({
     cwd: tmpDir,
-    env: npmEnv,
   });
 
   const exitCode = await testbed
@@ -28,6 +20,8 @@ describe("NPM init", async () => {
     .respondWith("1.1.1", KEYS.ENTER)
     .whenAsked("description:")
     .respondWith(KEYS.ENTER)
+    .whenAsked("entry point:")
+    .respondWith("index.js", KEYS.ENTER)
     .whenAsked("git repository:")
     .respondWith(KEYS.ENTER)
     .whenAsked("keywords:")
@@ -68,7 +62,6 @@ describe("NPM init with steps", async () => {
 
   const exitCode = await withEnv({
     cwd: tmpDir,
-    env: npmEnv,
   })
     .defineInteraction()
     .step("Give package a name", (whenAsked) => {
@@ -77,6 +70,7 @@ describe("NPM init with steps", async () => {
     .step("Additional information", (whenAsked) => {
       whenAsked("version:").respondWith("1.1.1", KEYS.ENTER);
       whenAsked("description:").respondWith(KEYS.ENTER);
+      whenAsked("entry point:").respondWith("index.js", KEYS.ENTER);
     })
     .step("NPM registry metadata", (whenAsked) => {
       whenAsked("git repository:").respondWith(KEYS.ENTER);
@@ -117,7 +111,6 @@ describe("NPM help", async () => {
 
   const exitCode = await withEnv({
     cwd: tmpDir,
-    env: npmEnv,
   })
     .defineInteraction()
     .expectOutput(
