@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 import { InteractionBuilder, TestEnv } from "./types.js";
 
-const DEFAULT_STEP_TIMEOUT = 5000;
+const DEFAULT_STEP_TIMEOUT = 10_000;
 
 type Step = { id: number; timeout?: number } & (
   | {
