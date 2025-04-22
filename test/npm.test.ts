@@ -22,6 +22,8 @@ describe("NPM init", async () => {
     .respondWith(KEYS.ENTER)
     .whenAsked("entry point:")
     .respondWith("index.js", KEYS.ENTER)
+    .whenAsked("test command:")
+    .respondWith(KEYS.ENTER)
     .whenAsked("git repository:")
     .respondWith(KEYS.ENTER)
     .whenAsked("keywords:")
@@ -71,6 +73,7 @@ describe("NPM init with steps", async () => {
       whenAsked("version:").respondWith("1.1.1", KEYS.ENTER);
       whenAsked("description:").respondWith(KEYS.ENTER);
       whenAsked("entry point:").respondWith("index.js", KEYS.ENTER);
+      whenAsked("test command:").respondWith(KEYS.ENTER);
     })
     .step("NPM registry metadata", (whenAsked) => {
       whenAsked("git repository:").respondWith(KEYS.ENTER);
