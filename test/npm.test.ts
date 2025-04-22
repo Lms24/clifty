@@ -12,18 +12,24 @@ describe("NPM init", async () => {
     cwd: tmpDir,
   });
 
-  const exitCode = await testbed
+  const firstSteps = testbed
     .defineInteraction()
     .whenAsked("package name:")
     .respondWith("testproject123", KEYS.ENTER)
     .whenAsked("version:")
     .respondWith("1.1.1", KEYS.ENTER)
     .whenAsked("description:")
-    .respondWith(KEYS.ENTER)
-    .whenAsked("entry point:")
-    .respondWith("index.js", KEYS.ENTER)
-    .whenAsked("test command:")
-    .respondWith(KEYS.ENTER)
+    .respondWith(KEYS.ENTER);
+
+  if (process.env.CI) {
+    firstSteps
+      .whenAsked("entry point:")
+      .respondWith("index.js", KEYS.ENTER)
+      .whenAsked("test command:")
+      .respondWith(KEYS.ENTER);
+  }
+
+  const exitCode = await firstSteps
     .whenAsked("git repository:")
     .respondWith(KEYS.ENTER)
     .whenAsked("keywords:")
