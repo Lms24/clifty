@@ -54,7 +54,7 @@ jobs:
       - name: Check for changes to release
         id: check_changes
         run: |
-          git fetch --prune --unshallow || true
+          git fetch --prune
           if [[ -n $(git log --oneline HEAD~1..HEAD | grep -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:') ]]; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
           else
