@@ -23,10 +23,16 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major",
+    "release:patch": "standard-version --release-as patch",
+    "prepublishOnly": "npm pack --dry-run"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
+    "standard-version": "^9.5.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.2",
     "vitest": "^3.1.1"

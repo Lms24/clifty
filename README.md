@@ -2,7 +2,7 @@
   <img width="300" height="300" src="./doc/clifty-logo.png" />
 </div>
 
-> Your CLI’s nifty new best friend. Declarative CLI orchestration made easy.
+> Your CLI's nifty new best friend. Declarative CLI orchestration made easy.
 
 **WARNING**: API design still work in progress, expect breaking changes!
 
@@ -102,3 +102,50 @@ describe("NPM init with steps", async () => {
   });
 });
 ```
+
+## Contributing
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) for our commit messages. This helps us automatically generate changelogs and determine version bumps. Please follow these guidelines when contributing:
+
+### Commit Message Format
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+#### Types
+
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools
+
+#### Examples
+
+```bash
+feat(cli): add support for npm init testing
+fix(test): handle npm prompts consistently
+docs: update README with contribution guidelines
+```
+
+### Release Process
+
+Releases are automated based on conventional commits. When you push to main:
+
+1. The CI will check for conventional commits
+2. If found, it will:
+   - Update the version in package.json
+   - Update the CHANGELOG.md
+   - Create a git tag
+   - Create a GitHub release
+   - Publish to npm
+
+No manual steps are required for releases!
