@@ -1,9 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### 0.2.1 (2025-04-29)
+
+
+### Features
+
+* Add actions callback to `defineInteraction` ([fbd628d](https://github.com/Lms24/clifty/commit/fbd628d2a04c09738066d9d9c0865869fd71b31a))
 
 ## [0.2.0] - 2024-04-22
 
