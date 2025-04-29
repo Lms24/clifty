@@ -64,13 +64,15 @@ jobs:
       - name: Create Release
         if: steps.check_changes.outputs.has_changes == 'true'
         id: create_release
-        uses: standard-version/standard-version@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          releaseAs: patch
-          skip-tag: true
-          skip-changelog: false
-          skip-commit: false
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          pnpm run release
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          echo "tag_name=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         if: steps.check_changes.outputs.has_changes == 'true'
