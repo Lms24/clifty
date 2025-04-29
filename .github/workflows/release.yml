@@ -86,8 +86,10 @@ jobs:
       - name: Push changes
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
-          git add .
-          git commit -m "chore: prepare release"
+          if [[ -n $(git status --porcelain) ]]; then
+            git add .
+            git commit -m "chore: prepare release"
+          fi
           git push --follow-tags origin HEAD:main
 
       - name: Create npm package
