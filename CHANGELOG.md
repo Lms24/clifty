@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/Lms24/clifty/compare/v0.2.3...v0.2.4) (2025-04-29)
+
+
+### Bug Fixes
+
+* fix ci? ([7647236](https://github.com/Lms24/clifty/commit/7647236cb578d4af88ecf184b1297d3aef172d1c))
+
 ### [0.2.3](https://github.com/Lms24/clifty/compare/v0.2.2...v0.2.3) (2025-04-29)
 
 
