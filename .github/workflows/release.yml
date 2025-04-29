@@ -64,7 +64,7 @@ jobs:
           fi
 
           # Check for conventional commits with a more reliable pattern
-          if git log --oneline $COMMITS_TO_CHECK | grep -q -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:.*$'; then
+          if git log --oneline --pretty=format:"%s"  $COMMITS_TO_CHECK | grep -q -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:.*$'; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
           else
             echo "has_changes=false" >> $GITHUB_OUTPUT
