@@ -86,7 +86,21 @@ jobs:
       - name: Push changes
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
+          git add .
+          git commit -m "chore: prepare release"
           git push --follow-tags origin HEAD:main
+
+      - name: Create npm package
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: pnpm pack
+
+      - name: Upload npm package
+        if: steps.check_changes.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package
+          path: clifty-*.tgz
+          retention-days: 1
 
       - name: Create GitHub Release
         if: steps.check_changes.outputs.has_changes == 'true'
