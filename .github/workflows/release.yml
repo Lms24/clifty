@@ -92,7 +92,8 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         uses: softprops/action-gh-release@v1
         with:
-          name: Release ${{ steps.create_release.outputs.tag_name }}
+          name: Release ${{ steps.create_release.outputs.version }}
+          tag_name: v${{ steps.create_release.outputs.version }}
           body: ${{ steps.create_release.outputs.changelog }}
           draft: false
           prerelease: false
