@@ -1,5 +1,9 @@
 import { ScenarioBuilder } from "./scenarioBuilder.js";
-import type { InteractionBuilder, TestEnv as ITestEnv } from "./types.js";
+import type {
+  Actions,
+  InteractionBuilder,
+  TestEnv as ITestEnv,
+} from "./types.js";
 
 interface TestEnvOptions {
   cwd?: string;
@@ -18,11 +22,22 @@ export class TestEnv implements ITestEnv {
     this.#debug = options.debug ?? false;
   }
 
-  defineInteraction(): Pick<
-    InteractionBuilder,
-    "whenAsked" | "step" | "run" | "expectOutput"
-  > {
-    return new ScenarioBuilder(this);
+  defineInteraction(
+    actionCallback?: (
+      actions: Actions & Pick<InteractionBuilder, "step">
+    ) => void
+  ): InteractionBuilder {
+    const builder = new ScenarioBuilder(this);
+
+    if (actionCallback) {
+      actionCallback({
+        whenAsked: builder.whenAsked.bind(builder),
+        expectOutput: builder.expectOutput.bind(builder),
+        step: builder.step.bind(builder),
+      });
+    }
+
+    return builder;
   }
 
   get cwd(): string {

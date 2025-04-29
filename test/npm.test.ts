@@ -72,22 +72,22 @@ describe("NPM init with steps", async () => {
     cwd: tmpDir,
   })
     .defineInteraction()
-    .step("Give package a name", (whenAsked) => {
+    .step("Give package a name", ({ whenAsked }) => {
       whenAsked("package name:").respondWith("testproject123", KEYS.ENTER);
     })
-    .step("Additional information", (whenAsked) => {
+    .step("Additional information", ({ whenAsked }) => {
       whenAsked("version:").respondWith("1.1.1", KEYS.ENTER);
       whenAsked("description:").respondWith(KEYS.ENTER);
       // whenAsked("entry point:").respondWith("index.js", KEYS.ENTER);
       // whenAsked("test command:").respondWith(KEYS.ENTER);
     })
-    .step("NPM registry metadata", (whenAsked) => {
+    .step("NPM registry metadata", ({ whenAsked }) => {
       whenAsked("git repository:").respondWith(KEYS.ENTER);
       whenAsked("keywords:").respondWith(KEYS.ENTER);
       whenAsked("author:").respondWith(KEYS.ENTER);
       whenAsked("license:").respondWith("MIT", KEYS.ENTER);
     })
-    .step("Confirmation", (whenAsked) => {
+    .step("Confirmation", ({ whenAsked }) => {
       whenAsked("Is this OK?").respondWith("yes", KEYS.ENTER);
     })
     .run("npm init");
@@ -111,6 +111,71 @@ describe("NPM init with steps", async () => {
         "description": ""
       }
       "
+    `);
+  });
+});
+
+describe("NPM init with steps in defineInteraction", async () => {
+  const tmpDir = tmpdir();
+
+  const env = {
+    cwd: tmpDir,
+  };
+
+  const exitCode = await withEnv(env)
+    .defineInteraction(({ step, whenAsked }) => {
+      whenAsked("package name:").respondWith("testproject123", KEYS.ENTER);
+
+      step("Additional information", ({ whenAsked }) => {
+        whenAsked("version:").respondWith("1.1.1", KEYS.ENTER);
+        whenAsked("description:").respondWith(KEYS.ENTER);
+      });
+
+      step("NPM registry metadata", ({ whenAsked }) => {
+        whenAsked("git repository:").respondWith(KEYS.ENTER);
+        whenAsked("keywords:").respondWith(KEYS.ENTER);
+        whenAsked("author:").respondWith(KEYS.ENTER);
+        whenAsked("license:").respondWith("MIT", KEYS.ENTER);
+      });
+
+      step("Confirmation", ({ whenAsked }) => {
+        whenAsked("Is this OK?").respondWith("yes", KEYS.ENTER);
+      });
+    })
+    .expectOutput(
+      `{
+  "name": "testproject123",
+  "version": "1.1.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\"Error: no test specified\\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": ""
+}`
+    )
+    .run("npm init");
+
+  it("terminates successfully", () => {
+    expect(exitCode).toBe(0);
+  });
+
+  it("package.json contains the valid entries", () => {
+    expect(readFileSync(join(tmpDir, "package.json")).toString())
+      .toMatchInlineSnapshot(`
+      "{
+        "name": "testproject123",
+        "version": "1.1.1",
+        "main": "index.js",
+        "scripts": {
+          "test": "echo \\"Error: no test specified\\" && exit 1"
+        },
+        "author": "",
+        "license": "MIT",
+        "description": ""
+      }
+      " 
     `);
   });
 });
@@ -154,5 +219,21 @@ All commands:
   it("terminates with error", () => {
     // interestingly, npm --help terminates with an error code (TIL)
     expect(exitCode).toBe(1);
+  });
+});
+
+describe("NPM version", async () => {
+  const tmpDir = tmpdir();
+
+  const exitCode = await withEnv({
+    cwd: tmpDir,
+  })
+    .defineInteraction(({ expectOutput }) => {
+      expectOutput("10");
+    })
+    .run("npm --version");
+
+  it("terminates successfully", () => {
+    expect(exitCode).toBe(0);
   });
 });

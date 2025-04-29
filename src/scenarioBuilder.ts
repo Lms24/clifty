@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import { InteractionBuilder, TestEnv } from "./types.js";
+import { Actions, InteractionBuilder, TestEnv } from "./types.js";
 
 const DEFAULT_STEP_TIMEOUT = 10_000;
 
@@ -48,7 +48,9 @@ export class ScenarioBuilder implements InteractionBuilder {
   whenAsked(
     stdout: string,
     opts?: { timeout?: number }
-  ): Pick<InteractionBuilder, "respondWith"> {
+  ): {
+    respondWith: (...response: string[]) => InteractionBuilder;
+  } {
     this.#steps.push({
       id: this.#stepCount++,
       type: "prompt",
@@ -57,22 +59,14 @@ export class ScenarioBuilder implements InteractionBuilder {
       output: stdout,
     });
 
-    return this;
+    return {
+      respondWith: (...response: string[]) => {
+        this.#promptResponses[this.#promptCount] = response;
+        this.#promptCount++;
+        return this;
+      },
+    };
   }
-
-  /**
-   * Respond to the last `whenAsked` prompt via `stdin`.
-   *
-   * @param stdinResponse - The response to the last `whenAsked` prompt.
-   */
-  respondWith(
-    ...stdinResponse: string[]
-  ): Omit<InteractionBuilder, "respondWith"> {
-    this.#promptResponses[this.#promptCount] = stdinResponse;
-    this.#promptCount++;
-    return this;
-  }
-
   /**
    * Expect the specific `stdout` CLI output.
    *
@@ -85,7 +79,7 @@ export class ScenarioBuilder implements InteractionBuilder {
   expectOutput(
     output: string,
     opts?: { timeout?: number }
-  ): Omit<InteractionBuilder, "respondWith"> {
+  ): InteractionBuilder {
     this.#steps.push({
       id: this.#stepCount++,
       type: "output",
@@ -105,10 +99,13 @@ export class ScenarioBuilder implements InteractionBuilder {
    */
   step(
     name: string,
-    stepCallback: (whenAsked: ScenarioBuilder["whenAsked"]) => void
-  ): Omit<InteractionBuilder, "respondWith"> {
+    stepCallback: (actions: Actions) => void
+  ): InteractionBuilder {
     try {
-      stepCallback(this.whenAsked.bind(this));
+      stepCallback({
+        whenAsked: this.whenAsked.bind(this),
+        expectOutput: this.expectOutput.bind(this),
+      });
     } catch (e) {
       throw new Error(`Error in step '${name}', ${e}`);
     }
