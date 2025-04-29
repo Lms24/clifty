@@ -54,8 +54,17 @@ jobs:
       - name: Check for changes to release
         id: check_changes
         run: |
-          git fetch --prune
-          if [[ -n $(git log --oneline HEAD~1..HEAD | grep -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:') ]]; then
+          git fetch --prune --tags
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            # If no tags exist, check all commits
+            COMMITS_TO_CHECK="HEAD"
+          else
+            COMMITS_TO_CHECK="$LATEST_TAG..HEAD"
+          fi
+
+          # Check for conventional commits with a more reliable pattern
+          if git log --oneline $COMMITS_TO_CHECK | grep -q -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:.*$'; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
           else
             echo "has_changes=false" >> $GITHUB_OUTPUT
