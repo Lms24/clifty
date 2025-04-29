@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/Lms24/clifty/compare/v0.2.2...v0.2.3) (2025-04-29)
+
+
+### Features
+
+* Add actions callback to `defineInteraction` ([b70ff20](https://github.com/Lms24/clifty/commit/b70ff20025d727a8acf079ff92b89976c927b8d7))
+
 ### [0.2.2](https://github.com/Lms24/clifty/compare/v0.2.1...v0.2.2) (2025-04-29)
 
 
