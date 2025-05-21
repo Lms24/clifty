@@ -8,3 +8,5 @@ export const KEYS = {
 };
 
 export { TestEnv } from "./testEnv.js";
+
+export { withEnv } from "./withEnv.js";
