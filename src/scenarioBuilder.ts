@@ -164,6 +164,14 @@ export class ScenarioBuilder implements InteractionBuilder {
         }
       });
 
+      child.on("close", (exitCode) => {
+        if (exitCode === null) {
+          reject(new Error("Process terminated without exit code"));
+        } else {
+          resolve(exitCode);
+        }
+      });
+
       for (let i = 0; i < this.#steps.length; i++) {
         const step = this.#steps[i];
 
@@ -196,13 +204,10 @@ ${this.#stdoutBuffer}`
         }
       }
 
-      child.on("close", (exitCode) => {
-        if (exitCode === null) {
-          reject(new Error("Process terminated without exit code"));
-        } else {
-          resolve(exitCode);
-        }
-      });
+      child.stdin.destroy();
+      child.stdin.destroy();
+      child.stdout.destroy();
+      child.unref();
     });
   }
 
