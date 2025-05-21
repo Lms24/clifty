@@ -1,6 +1,6 @@
 {
   "name": "clifty",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A CLI orchestration and testing tool",
   "repository": {
     "type": "git",

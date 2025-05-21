@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/Lms24/clifty/compare/v0.2.4...v0.2.5) (2025-05-21)
+
+
+### Features
+
+* Export `withEnv` from package ([#1](https://github.com/Lms24/clifty/issues/1)) ([f4301a0](https://github.com/Lms24/clifty/commit/f4301a04acba03645d1a7ad1c50cb9275fc3b079))
+
 ### [0.2.4](https://github.com/Lms24/clifty/compare/v0.2.3...v0.2.4) (2025-04-29)
 
 
