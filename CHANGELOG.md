@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/Lms24/clifty/compare/v0.2.5...v0.2.6) (2025-05-21)
+
+
+### Bug Fixes
+
+* Ensure child process disconnects ([#2](https://github.com/Lms24/clifty/issues/2)) ([9f61b3a](https://github.com/Lms24/clifty/commit/9f61b3a62b1c1646e313318130febf4481ccdc0c))
+
 ### [0.2.5](https://github.com/Lms24/clifty/compare/v0.2.4...v0.2.5) (2025-05-21)
 
 
