@@ -221,15 +221,24 @@ ${this.#stdoutBuffer}`
         reject(new Error(`Timeout while waiting on '${output}'`));
       }, actualTimeout);
 
-      const stdoutListener = () => {
+      let addedListener = false;
+
+      const checkStdout = () => {
         if (this.#stdoutBuffer.includes(output)) {
           clearTimeout(timeoutTimeout);
-          this.output.removeEventListener("stdout", stdoutListener);
+          if (addedListener) {
+            this.output.removeEventListener("stdout", checkStdout);
+          }
           resolve();
         }
       };
 
-      this.output.addEventListener("stdout", stdoutListener);
+      // invoke the check once immediately, in case the output was already emitted
+      // and the CLI blocks further emissions (e.g. because waiting on input)
+      checkStdout();
+
+      this.output.addEventListener("stdout", checkStdout);
+      addedListener = true;
     });
   }
 }
