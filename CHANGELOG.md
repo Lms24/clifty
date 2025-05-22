@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/Lms24/clifty/compare/v0.2.6...v0.2.7) (2025-05-22)
+
+
+### Bug Fixes
+
+* **engine:** Immediately check output buffer when waiting for output ([#3](https://github.com/Lms24/clifty/issues/3)) ([d2ded6b](https://github.com/Lms24/clifty/commit/d2ded6bae0b81a7775a25106192301f052a4d01a))
+
 ### [0.2.6](https://github.com/Lms24/clifty/compare/v0.2.5...v0.2.6) (2025-05-21)
 
 
