@@ -1,5 +1,10 @@
 import { spawn } from "child_process";
-import { Actions, InteractionBuilder, TestEnv } from "./types.js";
+import {
+  Actions,
+  ExpectOutputOptions,
+  InteractionBuilder,
+  TestEnv,
+} from "./types.js";
 
 const DEFAULT_STEP_TIMEOUT = 10_000;
 
@@ -13,6 +18,7 @@ type Step = { id: number; timeout?: number } & (
   | {
       type: "output";
       output: string;
+      timeout?: number;
     }
 );
 
@@ -47,7 +53,7 @@ export class ScenarioBuilder implements InteractionBuilder {
    */
   whenAsked(
     stdout: string,
-    opts?: { timeout?: number }
+    opts?: ExpectOutputOptions
   ): {
     respondWith: (...response: string[]) => InteractionBuilder;
   } {
@@ -76,10 +82,7 @@ export class ScenarioBuilder implements InteractionBuilder {
    * @param stdout - The specific `stdout` CLI output to expect.
    * @param opts - Optional timeout (default is 5 seconds).
    */
-  expectOutput(
-    output: string,
-    opts?: { timeout?: number }
-  ): InteractionBuilder {
+  expectOutput(output: string, opts?: ExpectOutputOptions): InteractionBuilder {
     this.#steps.push({
       id: this.#stepCount++,
       type: "output",
