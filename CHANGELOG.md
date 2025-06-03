@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/Lms24/clifty/compare/v0.2.7...v0.2.8) (2025-06-03)
+
+
+### Features
+
+* **types:** Allow `timeout` option in `waitForOutput` ([#6](https://github.com/Lms24/clifty/issues/6)) ([c8f43c7](https://github.com/Lms24/clifty/commit/c8f43c7dba39aeb9a32705aee4a3b955a0cecc9a))
+
 ### [0.2.7](https://github.com/Lms24/clifty/compare/v0.2.6...v0.2.7) (2025-05-22)
 
 
