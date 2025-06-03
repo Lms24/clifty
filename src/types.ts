@@ -3,15 +3,26 @@ export type Actions = {
   expectOutput: InteractionBuilder["expectOutput"];
 };
 
+export interface ExpectOutputOptions {
+  /**
+   * The number of milliseconds to wait for the output to be emitted.
+   * @default 5000 (5s)
+   */
+  timeout?: number;
+}
+
 export interface InteractionBuilder {
   whenAsked: (
     prompt: string,
-    opts?: { timeout?: number }
+    opts?: ExpectOutputOptions
   ) => {
     respondWith: (...response: string[]) => InteractionBuilder;
   };
 
-  expectOutput: (output: string) => InteractionBuilder;
+  expectOutput: (
+    output: string,
+    opts?: ExpectOutputOptions
+  ) => InteractionBuilder;
 
   step: (
     name: string,
