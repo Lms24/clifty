@@ -8,7 +8,7 @@ import {
 
 const DEFAULT_STEP_TIMEOUT = 10_000;
 
-type Step = { id: number; timeout?: number } & (
+type Step = { id: number; timeout?: number; stepWrapperName: string } & (
   | {
       type: "prompt";
       promptIndex: number;
@@ -35,6 +35,8 @@ export class ScenarioBuilder implements InteractionBuilder {
   #promptCount = 0;
   #stepCount = 0;
   #promptResponses: Record<number, string | string[]>;
+
+  #stepWrapperStack: Array<string> = [];
 
   constructor(testEnv: TestEnv) {
     this.#testEnv = testEnv;
@@ -63,6 +65,7 @@ export class ScenarioBuilder implements InteractionBuilder {
       promptIndex: this.#promptCount,
       timeout: opts?.timeout,
       output: stdout,
+      stepWrapperName: this.#stepWrapperStack.join(" > "),
     });
 
     return {
@@ -73,6 +76,7 @@ export class ScenarioBuilder implements InteractionBuilder {
       },
     };
   }
+
   /**
    * Expect the specific `stdout` CLI output.
    *
@@ -88,6 +92,7 @@ export class ScenarioBuilder implements InteractionBuilder {
       type: "output",
       output,
       timeout: opts?.timeout,
+      stepWrapperName: this.#stepWrapperStack.join(" > "),
     });
     return this;
   }
@@ -104,6 +109,8 @@ export class ScenarioBuilder implements InteractionBuilder {
     name: string,
     stepCallback: (actions: Actions) => void
   ): InteractionBuilder {
+    this.#stepWrapperStack.push(name);
+
     try {
       stepCallback({
         whenAsked: this.whenAsked.bind(this),
@@ -111,7 +118,10 @@ export class ScenarioBuilder implements InteractionBuilder {
       });
     } catch (e) {
       throw new Error(`Error in step '${name}', ${e}`);
+    } finally {
+      this.#stepWrapperStack.pop();
     }
+
     return this;
   }
 
@@ -181,9 +191,13 @@ export class ScenarioBuilder implements InteractionBuilder {
         try {
           await this.#waitForOutput(step);
         } catch {
+          const errPrefix = step.stepWrapperName
+            ? step.stepWrapperName + " > "
+            : "";
+
           reject(
             new Error(
-              `Timeout waiting on ${
+              `${errPrefix}Timeout waiting on ${
                 step.type === "prompt" ? "prompt" : "output"
               }. 
 Waiting for: 
