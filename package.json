@@ -1,29 +1,20 @@
 {
-  "name": "clifty",
+  "name": "clifty-monorepo",
   "version": "0.2.8",
-  "description": "A CLI orchestration and testing tool",
+  "description": "A CLI orchestration and testing tool - monorepo",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lms24/clifty"
   },
-  "files": [
-    "dist"
-  ],
   "author": "Lukas Stracke",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
+  "private": true,
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "test": "pnpm -r test",
+    "test:watch": "pnpm -r test:watch",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major",

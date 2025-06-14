@@ -64,7 +64,7 @@ jobs:
           fi
 
           # Check for conventional commits with a more reliable pattern
-          if git log --oneline --pretty=format:"%s"  $COMMITS_TO_CHECK | grep -q -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:.*$'; then
+          if git log --oneline $COMMITS_TO_CHECK | grep -q -E '^(feat|fix|perf|revert|docs|style|chore|refactor|test|build|ci)(\([a-z0-9-]+\))?:.*$'; then
             echo "has_changes=true" >> $GITHUB_OUTPUT
           else
             echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -77,8 +77,13 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           pnpm run release
-          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-          echo "tag_name=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          # Update package version to match root
+          ROOT_VERSION=$(node -p "require('./package.json').version")
+          cd packages/clifty
+          npm version $ROOT_VERSION --no-git-tag-version
+          cd ../..
+          echo "version=$ROOT_VERSION" >> $GITHUB_OUTPUT
+          echo "tag_name=v$ROOT_VERSION" >> $GITHUB_OUTPUT
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           cat CHANGELOG.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -94,14 +99,16 @@ jobs:
 
       - name: Create npm package
         if: steps.check_changes.outputs.has_changes == 'true'
-        run: pnpm pack
+        run: |
+          cd packages/clifty
+          pnpm pack
 
       - name: Upload npm package
         if: steps.check_changes.outputs.has_changes == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: npm-package
-          path: clifty-*.tgz
+          path: packages/clifty/clifty-*.tgz
           retention-days: 1
 
       - name: Create GitHub Release
@@ -114,7 +121,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            clifty-${{ steps.create_release.outputs.version }}.tgz
+            packages/clifty/clifty-${{ steps.create_release.outputs.version }}.tgz
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -122,6 +129,7 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          cd packages/clifty
           pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
