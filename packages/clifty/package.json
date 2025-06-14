@@ -1,0 +1,34 @@
+{
+  "name": "clifty",
+  "version": "0.2.8",
+  "description": "A CLI orchestration and testing tool",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lms24/clifty"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "Lukas Stracke",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.2",
+    "vitest": "^3.1.1"
+  }
+}
