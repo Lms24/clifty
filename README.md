@@ -105,47 +105,30 @@ describe("NPM init with steps", async () => {
 
 ## Contributing
 
-We use [Conventional Commits](https://www.conventionalcommits.org/) for our commit messages. This helps us automatically generate changelogs and determine version bumps. Please follow these guidelines when contributing:
+We use [Changesets](https://github.com/changesets/changesets) to manage versioning and publishing. When contributing to this project, please follow these guidelines:
 
-### Commit Message Format
+### Adding Changes
 
-```
-<type>(<scope>): <description>
+When you make changes that should be released, you need to add a changeset:
 
-[optional body]
+1. Run `pnpm changeset` in the root of the repository
+2. Select the packages that should be bumped
+3. Select the type of version bump (patch, minor, or major)
+4. Write a summary of the changes
+5. Commit the generated changeset file along with your changes
 
-[optional footer(s)]
-```
+### Changeset Types
 
-#### Types
-
-- `feat`: A new feature
-- `fix`: A bug fix
-- `docs`: Documentation only changes
-- `style`: Changes that do not affect the meaning of the code
-- `refactor`: A code change that neither fixes a bug nor adds a feature
-- `perf`: A code change that improves performance
-- `test`: Adding missing tests or correcting existing tests
-- `chore`: Changes to the build process or auxiliary tools
-
-#### Examples
-
-```bash
-feat(cli): add support for npm init testing
-fix(test): handle npm prompts consistently
-docs: update README with contribution guidelines
-```
+- **Patch**: Bug fixes and minor updates that don't change the API
+- **Minor**: New features that don't break existing functionality
+- **Major**: Breaking changes that require users to modify their code
 
 ### Release Process
 
-Releases are automated based on conventional commits. When you push to main:
+Releases are managed through GitHub Actions:
 
-1. The CI will check for conventional commits
-2. If found, it will:
-   - Update the version in package.json
-   - Update the CHANGELOG.md
-   - Create a git tag
-   - Create a GitHub release
-   - Publish to npm
+1. **PR Review**: Every PR must include a changeset. A GitHub Action will check this automatically.
+2. **Version Bump**: Maintainers can manually trigger the "Release (Manual)" GitHub Action with the "version" option to create a version bump PR.
+3. **Publishing**: After the version bump PR is merged, maintainers can trigger the "Release (Manual)" GitHub Action with the "publish" option to publish to npm.
 
-No manual steps are required for releases!
+This process ensures controlled releases and proper versioning based on the changes made.

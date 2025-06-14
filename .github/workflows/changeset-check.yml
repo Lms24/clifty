@@ -1,0 +1,56 @@
+name: Check Changeset
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  changeset-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for changeset
+        run: |
+          # Check if there are any changesets in the .changeset directory
+          if [ -z "$(find .changeset -name '*.md' -not -name 'README.md' -print -quit)" ]; then
+            echo "❌ No changeset found!"
+            echo "Please add a changeset by running 'pnpm changeset' and commit the generated file."
+            echo "This helps us understand what changes you're making and manage versioning."
+            exit 1
+          else
+            echo "✅ Changeset found!"
+            echo "The following changesets were found:"
+            find .changeset -name '*.md' -not -name 'README.md' -exec basename {} \;
+          fi

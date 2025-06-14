@@ -15,15 +15,14 @@
     "dev": "pnpm -r dev",
     "test": "pnpm -r test",
     "test:watch": "pnpm -r test:watch",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:major": "standard-version --release-as major",
-    "release:patch": "standard-version --release-as patch",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
     "prepublishOnly": "npm pack --dry-run"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.4",
     "@types/node": "^22.14.1",
-    "standard-version": "^9.5.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.2",
     "vitest": "^3.1.1"
