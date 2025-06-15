@@ -190,60 +190,60 @@ describe("NPM init with steps in defineInteraction", async () => {
   });
 });
 
-// describe.skip("NPM help", async () => {
-//   const tmpDir = tmpdir();
+describe("NPM help", async () => {
+  const tmpDir = tmpdir();
 
-//   const exitCode = await withEnv({
-//     cwd: tmpDir,
-//   })
-//     .defineInteraction()
-//     .expectOutput(
-//       `npm <command>
+  const exitCode = await withEnv({
+    cwd: tmpDir,
+  })
+    .defineInteraction()
+    .expectOutput(
+      `npm <command>
 
-// Usage:
+Usage:
 
-// npm install        install all the dependencies in your project
-// npm install <foo>  add the <foo> dependency to your project
-// npm test           run this project's tests
-// npm run <foo>      run the script named <foo>
-// npm <command> -h   quick help on <command>
-// npm -l             display usage info for all commands
-// npm help <term>    search for help on <term>
-// npm help npm       more involved overview
+npm install        install all the dependencies in your project
+npm install <foo>  add the <foo> dependency to your project
+npm test           run this project's tests
+npm run <foo>      run the script named <foo>
+npm <command> -h   quick help on <command>
+npm -l             display usage info for all commands
+npm help <term>    search for help on <term>
+npm help npm       more involved overview
 
-// All commands:
+All commands:
 
-//     access, adduser, audit, bugs, cache, ci, completion,
-//     config, dedupe, deprecate, diff, dist-tag, docs, doctor,
-//     edit, exec, explain, explore, find-dupes, fund, get, help,
-//     help-search, hook, init, install, install-ci-test,
-//     install-test, link, ll, login, logout, ls, org, outdated,
-//     owner, pack, ping, pkg, prefix, profile, prune, publish,
-//     query, rebuild, repo, restart, root, run-script, sbom,
-//     search, set, shrinkwrap, star, stars, start, stop, team,
-//     test, token, uninstall, unpublish, unstar, update, version,
-//     view, whoami`
-//     )
-//     .run("npm --help");
+    access, adduser, audit, bugs, cache, ci, completion,
+    config, dedupe, deprecate, diff, dist-tag, docs, doctor,
+    edit, exec, explain, explore, find-dupes, fund, get, help,
+    help-search, hook, init, install, install-ci-test,
+    install-test, link, ll, login, logout, ls, org, outdated,
+    owner, pack, ping, pkg, prefix, profile, prune, publish,
+    query, rebuild, repo, restart, root, run-script, sbom,
+    search, set, shrinkwrap, star, stars, start, stop, team,
+    test, token, uninstall, unpublish, unstar, update, version,
+    view, whoami`
+    )
+    .run("npm --help");
 
-//   it("terminates with error", () => {
-//     // interestingly, npm --help terminates with an error code (TIL)
-//     expect(exitCode).toBe(1);
-//   });
-// });
+  it("terminates with error", () => {
+    // interestingly, npm --help terminates with an error code (TIL)
+    expect(exitCode).toBe(1);
+  });
+});
 
-// describe.skip("NPM version", async () => {
-//   const tmpDir = tmpdir();
+describe("NPM version", async () => {
+  const tmpDir = tmpdir();
 
-//   const exitCode = await withEnv({
-//     cwd: tmpDir,
-//   })
-//     .defineInteraction(({ expectOutput }) => {
-//       expectOutput("10");
-//     })
-//     .run("npm --version");
+  const exitCode = await withEnv({
+    cwd: tmpDir,
+  })
+    .defineInteraction(({ expectOutput }) => {
+      expectOutput("10");
+    })
+    .run("npm --version");
 
-//   it("terminates successfully", () => {
-//     expect(exitCode).toBe(0);
-//   });
-// });
+  it("terminates successfully", () => {
+    expect(exitCode).toBe(0);
+  });
+});
