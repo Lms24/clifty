@@ -100,33 +100,38 @@ jobs:
         if: fromJSON(steps.skip_check.outputs.result).skip != true
         id: changeset_check
         run: |
-          # Use changeset status to check for changesets since main branch
-          echo "Checking for changesets..."
+          echo "Checking if this PR added a changeset file..."
 
-          # Check if there are changesets in .changeset directory (excluding README.md)
-          changeset_count=$(find .changeset -name '*.md' -not -name 'README.md' | wc -l)
+          # Check if this PR has added any new changeset files compared to main
+          git fetch origin main:main
 
-          if [ "$changeset_count" -gt 0 ]; then
-            echo "✅ Found $changeset_count changeset(s)"
+          # Look for new changeset files added in this PR (excluding README.md)
+          new_changesets=$(git diff --name-only --diff-filter=A main...HEAD | grep '^\.changeset/.*\.md$' | grep -v 'README\.md' || true)
+
+          if [ -n "$new_changesets" ]; then
+            echo "✅ This PR added the following changeset(s):"
+            echo "$new_changesets" | while read -r file; do
+              echo "  - $(basename "$file")"
+            done
             echo "status=success" >> $GITHUB_OUTPUT
-            echo "The following changesets were found:"
-            find .changeset -name '*.md' -not -name 'README.md' -exec basename {} \;
           else
-            # No changeset files found, check if there are actual changes using changeset status
+            echo "❌ This PR has not added any changeset files."
+            
+            # Check if there are actually package changes that would require a changeset
             status_output=$(pnpm changeset status --since=main 2>&1 || true)
             echo "Changeset status output:"
             echo "$status_output"
             
             # If changeset status indicates changes but no changesets, we need one
             if echo "$status_output" | grep -q "The following packages are changed but have no changesets"; then
-              echo "❌ Changes detected but no changeset found!"
+              echo "❌ Changes detected in packages but no changeset found in this PR!"
               echo "status=missing" >> $GITHUB_OUTPUT
             elif echo "$status_output" | grep -q "No changesets present"; then
-              echo "✅ No changeset needed (no changes detected)"
+              echo "✅ No changeset needed (no package changes detected)"
               echo "status=no_changes" >> $GITHUB_OUTPUT
             else
               echo "❌ Unable to determine status, requiring changeset for safety"
-              echo "status=missing" >> $GITHUB_OUTPUT
+              echo "status=missing" >> $GITHUB_OUTPUT  
             fi
           fi
 
