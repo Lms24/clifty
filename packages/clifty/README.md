@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="300" height="300" src="./doc/clifty-logo.png" />
+  <img width="300" height="300" src="../../doc/clifty-logo.png" />
 </div>
 
 > Your CLI's nifty new best friend. Declarative CLI orchestration made easy.
