@@ -2,6 +2,7 @@ name: Check Changeset
 
 on:
   pull_request:
+    types: [opened, synchronize, edited]
     branches:
       - main
 
@@ -47,11 +48,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## 🔄 Changeset Check Skipped
+            const commentBody = `## 🔄 Changeset Check Skipped
 
             This PR has been marked to skip the changeset requirement using \`#skip-changeset\`.
 
@@ -61,8 +58,38 @@ jobs:
             - Development tooling changes
             - README updates
 
-            If this PR contains code changes that affect the public API, please remove \`#skip-changeset\` and add a proper changeset.`
+            If this PR contains code changes that affect the public API, please remove \`#skip-changeset\` and add a proper changeset.
+
+            <!-- changeset-check-comment -->`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
             });
+
+            const existingComment = comments.find(comment => 
+              comment.body.includes('<!-- changeset-check-comment -->')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
 
       - name: Exit early if skipped
         if: fromJSON(steps.skip_check.outputs.result).skip == true
@@ -140,11 +167,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## ❌ Missing Changeset
+            const commentBody = `## ❌ Missing Changeset
 
             This PR appears to have changes but is missing a changeset.
 
@@ -161,22 +184,78 @@ jobs:
             - Determine appropriate version bumps
             - Ensure nothing gets released without proper documentation
 
-            [Learn more about changesets](https://github.com/changesets/changesets)`
+            [Learn more about changesets](https://github.com/changesets/changesets)
+
+            <!-- changeset-check-comment -->`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
             });
+
+            const existingComment = comments.find(comment => 
+              comment.body.includes('<!-- changeset-check-comment -->')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
 
       - name: Comment on PR - Changeset Found
         if: fromJSON(steps.skip_check.outputs.result).skip != true && steps.changeset_check.outputs.status == 'success'
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
+            const commentBody = `## ✅ Changeset Found
+
+            Great! This PR includes the required changeset(s). The changes are properly documented and ready for review.
+
+            <!-- changeset-check-comment -->`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `## ✅ Changeset Found
-
-            Great! This PR includes the required changeset(s). The changes are properly documented and ready for review.`
+              issue_number: context.issue.number,
             });
+
+            const existingComment = comments.find(comment => 
+              comment.body.includes('<!-- changeset-check-comment -->')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: commentBody
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
 
       - name: Fail if changeset is missing
         if: fromJSON(steps.skip_check.outputs.result).skip != true && steps.changeset_check.outputs.status == 'missing'
