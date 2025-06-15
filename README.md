@@ -131,4 +131,16 @@ Releases are managed through GitHub Actions:
 2. **Version Bump**: Maintainers can manually trigger the "Release (Manual)" GitHub Action with the "version" option to create a version bump PR.
 3. **Publishing**: After the version bump PR is merged, maintainers can trigger the "Release (Manual)" GitHub Action with the "publish" option to publish to npm.
 
+### Skipping Changesets
+
+For changes that don't affect the published package (like documentation updates, CI changes, etc.), you can skip the changeset requirement by adding `#skip-changeset` anywhere in your PR description.
+
+**Use this only for:**
+
+- Documentation updates
+- CI/CD changes
+- Development tooling changes
+- README updates
+- Other non-code changes
+
 This process ensures controlled releases and proper versioning based on the changes made.
