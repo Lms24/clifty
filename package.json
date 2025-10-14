@@ -1,6 +1,6 @@
 {
   "name": "clifty-monorepo",
-  "version": "0.2.9",
+  "version": "0.3.2",
   "description": "A CLI orchestration and testing tool - monorepo",
   "repository": {
     "type": "git",
