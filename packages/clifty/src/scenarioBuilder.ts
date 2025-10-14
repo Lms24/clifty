@@ -5,6 +5,7 @@ import {
   InteractionBuilder,
   TestEnv,
 } from "./types.js";
+import { stripVTControlCharacters } from "node:util";
 
 const DEFAULT_STEP_TIMEOUT = 10_000;
 
@@ -157,7 +158,7 @@ export class ScenarioBuilder implements InteractionBuilder {
       }
 
       child.stdout.on("data", (data) => {
-        this.#stdoutBuffer += data.toString();
+        this.#stdoutBuffer += stripVTControlCharacters(data.toString());
         this.output.dispatchEvent(
           new CustomEvent("stdout", { detail: data.toString() })
         );
@@ -167,7 +168,7 @@ export class ScenarioBuilder implements InteractionBuilder {
       });
 
       child.stderr.on("data", (data) => {
-        this.#stdErrBuffer += data.toString();
+        this.#stdErrBuffer += stripVTControlCharacters(data.toString());
         this.output.dispatchEvent(
           new CustomEvent("stderr", { detail: data.toString() })
         );
